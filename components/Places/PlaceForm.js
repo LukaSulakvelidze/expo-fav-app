@@ -5,11 +5,14 @@ import ImagePicker from "./ImagePicker";
 import LocationPicker from "./LocationPicker";
 import Button from "../ui/Button";
 import { Place } from "../../models/place";
+import { useSQLiteContext } from "expo-sqlite";
 
 export default function PlaceForm({ onCreatePlace }) {
   const [enteredTitle, setEnteredTitle] = useState();
   const [selectedImage, setSelectedImage] = useState();
   const [pickedLocation, setPickedLocation] = useState();
+
+  const dateBase = useSQLiteContext();
 
   const changeTtitleHandler = (enteredText) => {
     setEnteredTitle(enteredText);
@@ -25,6 +28,15 @@ export default function PlaceForm({ onCreatePlace }) {
 
   const savePlaceHandler = () => {
     const placeDate = new Place(enteredTitle, selectedImage, pickedLocation);
+    try {
+      const response = dateBase.runAsync(
+        `INSERT INTO users (title, imageUri, address, location) VALUES (?, ?, ?)`,
+        [enteredTitle, selectedImage, pickedLocation]
+      );
+      console.log("Item saved successfully:", response?.changes);
+    } catch (error) {
+      console.error("Error saving item:", error);
+    }
     onCreatePlace(placeDate);
   };
 
