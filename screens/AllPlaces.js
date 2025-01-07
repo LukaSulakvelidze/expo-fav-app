@@ -1,17 +1,23 @@
 import { useEffect, useState } from "react";
 import PlacesList from "../components/Places/PlacesList";
 import { useIsFocused } from "@react-navigation/native";
+import { useSQLiteContext } from 'expo-sqlite';
 
-export default function AllPlaces({ route }) {
+export default function AllPlaces() {
+  const db = useSQLiteContext();
   const [loadedPlaces, setLoadedPlaces] = useState([]);
 
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    if (isFocused && route.params) {
-      setLoadedPlaces((prev) => [...prev, route.params.place]);
+    if (isFocused) {
+      async function getPlaces() {
+        const result = await db.getAllAsync('SELECT * FROM places');
+        setLoadedPlaces(result);
+      }
+      getPlaces();
     }
-  }, [isFocused, route]);
+  }, [isFocused]);
 
   return <PlacesList places={loadedPlaces} />;
 }
