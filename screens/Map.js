@@ -25,8 +25,7 @@ export default function Map({ navigation }) {
     }
 
     navigation.navigate("AddPlace", {
-      pickedLat: selectedLocation.lat,
-      pickedLng: selectedLocation.lng,
+      selectedLocation: selectedLocation,
     });
   }, [navigation, selectedLocation]);
 
