@@ -6,6 +6,7 @@ import IconButton from "./components/ui/IconButton";
 import { Colors } from "./constants/colors";
 import Map from "./screens/Map";
 import { SQLiteProvider } from "expo-sqlite";
+import { createDbIfNeeded } from "./service/dateBase";
 
 const Stack = createNativeStackNavigator();
 
@@ -56,15 +57,3 @@ export default function App() {
   );
 }
 
-const createDbIfNeeded = async (db) => {
-  console.log("Creating database");
-  try {
-    // Create a table
-    const response = await db.execAsync(
-      "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, imageUri TEXT, address TEXT, location TEXT)"
-    );
-    console.log("Database created", response);
-  } catch (error) {
-    console.error("Error creating database:", error);
-  }
-};

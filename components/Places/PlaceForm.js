@@ -6,10 +6,13 @@ import LocationPicker from "./LocationPicker";
 import Button from "../ui/Button";
 import { Place } from "../../models/place";
 
-export default function PlaceForm({ onCreatePlace }) {
+export default function PlaceForm({
+  onCreatePlace,
+  selectedLocation
+}) {
   const [enteredTitle, setEnteredTitle] = useState();
   const [selectedImage, setSelectedImage] = useState();
-  const [pickedLocation, setPickedLocation] = useState();
+  const [pickedLocation, setPickedLocation] = useState({ address: selectedLocation?.address, lat: selectedLocation?.lat, lng: selectedLocation?.lng });
 
   const changeTtitleHandler = (enteredText) => {
     setEnteredTitle(enteredText);
