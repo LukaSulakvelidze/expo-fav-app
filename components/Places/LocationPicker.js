@@ -26,8 +26,8 @@ export default function LocationPicker({ onPickLocation }) {
   useEffect(() => {
     if (isFocused && route.params) {
       const mapPickedLocation = route.params && {
-        lat: route.params.pickedLat,
-        lng: route.params.pickedLng,
+        lat: route?.params?.selectedLocation?.lat,
+        lng: route?.params?.selectedLocation?.lng,
       };
       setPickedLocation(mapPickedLocation);
     }
