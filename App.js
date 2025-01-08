@@ -7,6 +7,7 @@ import { Colors } from "./constants/colors";
 import Map from "./screens/Map";
 import { SQLiteProvider } from "expo-sqlite";
 import { createDbIfNeeded } from "./service/dateBase";
+import PlaceDetails from "./screens/PlaceDetails";
 
 const Stack = createNativeStackNavigator();
 
@@ -51,9 +52,15 @@ export default function App() {
               title: "Map",
             }}
           />
+          <Stack.Screen
+            name="PlaceDetails"
+            component={PlaceDetails}
+            options={{
+              title: "Loading place...",
+            }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </SQLiteProvider>
   );
 }
-
