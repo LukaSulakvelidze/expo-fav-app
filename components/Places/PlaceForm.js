@@ -1,68 +1,15 @@
-import { useCallback, useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { Colors } from "../../constants/colors";
 import ImagePicker from "./ImagePicker";
 import LocationPicker from "./LocationPicker";
 import Button from "../ui/Button";
-import { Place } from "../../models/place";
-import { useSQLiteContext } from "expo-sqlite";
 
-export default function PlaceForm({ onCreatePlace, selectedLocation }) {
-  const [enteredTitle, setEnteredTitle] = useState();
-  const [selectedImage, setSelectedImage] = useState();
-  const [pickedLocation, setPickedLocation] = useState({
-    address: selectedLocation?.address,
-    lat: selectedLocation?.lat,
-    lng: selectedLocation?.lng,
-  });
-
-  const dateBase = useSQLiteContext();
-  const changeTtitleHandler = (enteredText) => {
-    setEnteredTitle(enteredText);
-  };
-
-  const takeImageHandler = (imageUri) => {
-    setSelectedImage(imageUri);
-  };
-
-  const pickLocationHandler = useCallback((location) => {
-    setPickedLocation(location);
-  }, []);
-
-  const savePlaceHandler = () => {
-    const placeData = new Place(enteredTitle, selectedImage, pickedLocation);
-    console.log("Saving the following values to the database:");
-    console.log("Title:", enteredTitle);
-    console.log("Image URI:", selectedImage);
-    console.log("Address:", pickedLocation.address);
-    console.log("Latitude:", pickedLocation.lat);
-    console.log("Longitude:", pickedLocation.lng);
-    try {
-      const response = dateBase.runAsync(
-        `INSERT INTO places (title, imageUri, address, lat, lng) VALUES (?, ?, ?, ?, ?)`,
-        [
-          enteredTitle,
-          selectedImage,
-          pickedLocation,
-          pickedLocation.address,
-          pickedLocation.lat,
-          pickedLocation.lng,
-        ]
-      );
-      response
-        .then((value) => {
-          console.log("Database response:", value);
-          console.log("Item saved successfully");
-        })
-        .catch((error) => {
-          console.error("Error in database response:", error);
-        });
-    } catch (error) {
-      console.error("Error saving item:", error);
-    }
-    onCreatePlace(placeData);
-  };
-
+export default function PlaceForm({
+  changeTtitleHandler,
+  takeImageHandler,
+  pickLocationHandler,
+  savePlaceHandler,
+}) {
   return (
     <ScrollView style={styles.form}>
       <View>
