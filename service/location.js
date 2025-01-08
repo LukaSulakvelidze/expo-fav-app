@@ -8,7 +8,7 @@ export const getAddress = async (lat, lng) => {
   );
 
   if (!response) {
-    throw new Error("Failed detch");
+    throw new Error("Failed fetch");
   }
 
   const data = await response.json();

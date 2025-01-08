@@ -1,13 +1,20 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { Colors } from "../../constants/colors";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 function PlaceItem({ place, onSelect }) {
   return (
     <Pressable
       style={({ pressed }) => [styles.item, pressed && styles.pressed]}
-      onPress={onSelect}
+      onPress={onSelect.bind(this, place.id)}
     >
-      <Image style={styles.image} source={{ uri: place.imageUri }} />
+      {place.imageUri ? (
+        <Image style={styles.image} source={{ uri: place.imageUri }} />
+      ) : (
+        <View style={styles.iconContainer}>
+          <MaterialCommunityIcons name="image-broken" />
+        </View>
+      )}
       <View style={styles.info}>
         <Text style={styles.title}>{place.title}</Text>
         <Text style={styles.address}>{place.address}</Text>
@@ -38,6 +45,13 @@ const styles = StyleSheet.create({
     flex: 1,
     borderBottomLeftRadius: 4,
     borderTopLeftRadius: 4,
+    height: 100,
+  },
+  iconContainer: {
+    flex: 1,
+    width: 20,
+    justifyContent: "center",
+    alignItems: "center",
     height: 100,
   },
   info: {

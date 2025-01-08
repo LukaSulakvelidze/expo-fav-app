@@ -7,16 +7,16 @@ import Button from "../ui/Button";
 import { Place } from "../../models/place";
 import { useSQLiteContext } from "expo-sqlite";
 
-export default function PlaceForm({
-  onCreatePlace,
-  selectedLocation
-}) {
+export default function PlaceForm({ onCreatePlace, selectedLocation }) {
   const [enteredTitle, setEnteredTitle] = useState();
   const [selectedImage, setSelectedImage] = useState();
-  const [pickedLocation, setPickedLocation] = useState({ address: selectedLocation?.address, lat: selectedLocation?.lat, lng: selectedLocation?.lng });
+  const [pickedLocation, setPickedLocation] = useState({
+    address: selectedLocation?.address,
+    lat: selectedLocation?.lat,
+    lng: selectedLocation?.lng,
+  });
 
   const dateBase = useSQLiteContext();
-
   const changeTtitleHandler = (enteredText) => {
     setEnteredTitle(enteredText);
   };
@@ -30,17 +30,37 @@ export default function PlaceForm({
   }, []);
 
   const savePlaceHandler = () => {
-    const placeDate = new Place(enteredTitle, selectedImage, pickedLocation);
+    const placeData = new Place(enteredTitle, selectedImage, pickedLocation);
+    console.log("Saving the following values to the database:");
+    console.log("Title:", enteredTitle);
+    console.log("Image URI:", selectedImage);
+    console.log("Address:", pickedLocation.address);
+    console.log("Latitude:", pickedLocation.lat);
+    console.log("Longitude:", pickedLocation.lng);
     try {
       const response = dateBase.runAsync(
-        `INSERT INTO users (title, imageUri, address, location) VALUES (?, ?, ?)`,
-        [enteredTitle, selectedImage, pickedLocation]
+        `INSERT INTO places (title, imageUri, address, lat, lng) VALUES (?, ?, ?, ?, ?)`,
+        [
+          enteredTitle,
+          selectedImage,
+          pickedLocation,
+          pickedLocation.address,
+          pickedLocation.lat,
+          pickedLocation.lng,
+        ]
       );
-      console.log("Item saved successfully:", response?.changes);
+      response
+        .then((value) => {
+          console.log("Database response:", value);
+          console.log("Item saved successfully");
+        })
+        .catch((error) => {
+          console.error("Error in database response:", error);
+        });
     } catch (error) {
       console.error("Error saving item:", error);
     }
-    onCreatePlace(placeDate);
+    onCreatePlace(placeData);
   };
 
   return (
